@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Layout from "../components/Layout";
 import toast from "react-hot-toast";
-import axios from "axios";
+import axios from "axios"
 
 export const AddItem = () => {
     const [name, setName] = useState("");
@@ -9,11 +9,15 @@ export const AddItem = () => {
     const [description, setDescription] = useState("");
     const [coverImg, setCoverImg] = useState(null);
     const [additionalImgs, setAdditionalImgs] = useState(null);
+    const [submitbtntext, setSubmitBtnText] = useState("Submit");
+    const coverImgRef = useRef();
+    const addiImgRef = useRef();
 
     const handleSubmit = async (e) => {
        e.preventDefault();
        try {
-        
+
+        setSubmitBtnText("Submitting...")
         const formData = new FormData();
 
         formData.append("name", name);
@@ -29,6 +33,14 @@ export const AddItem = () => {
 
         if(res.data.success){
           toast.success("Item added successfully");
+          setName("");
+          setDescription("");
+          setType("");
+          setCoverImg(null);
+          setAdditionalImgs(null);
+          coverImgRef.current.value = "";
+          addiImgRef.current.value = "";
+          setSubmitBtnText("Submit");
         }
 
        } catch (error) {
@@ -68,17 +80,17 @@ export const AddItem = () => {
 
       <div>
          <label className="block mb-1 font-medium text-gray-700">Cover Image <span className="text-red-500">*</span></label>
-         <input type="file" accept="image/*" className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-gray-200 file:text-black hover:file:bg-gray-300" onChange={(e) => setCoverImg(e.target.files[0])} required/>
+         <input type="file" accept="image/*" ref={coverImgRef} className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-gray-200 file:text-black hover:file:bg-gray-300" onChange={(e) => setCoverImg(e.target.files[0])} required/>
       </div>
 
       <div>
         <label className="block mb-1 font-medium text-gray-700">Additional Images</label>
-        <input type="file" multiple accept="image/*" className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-gray-200 file:text-black hover:file:bg-gray-300" onChange={(e) => setAdditionalImgs(e.target.files)}/>
+        <input type="file" multiple accept="image/*" ref={addiImgRef} className="w-full file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:bg-gray-200 file:text-black hover:file:bg-gray-300" onChange={(e) => setAdditionalImgs(e.target.files)}/>
       </div>
 
       <div className="text-center w-full">
         <button type="submit" className="bg-yellow-500 w-full text-white font-semibold px-6 py-2 rounded-lg hover:bg-yellow-600 transition">
-          Submit
+          {submitbtntext}
         </button>
       </div>
     </form>

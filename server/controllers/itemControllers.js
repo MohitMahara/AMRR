@@ -99,9 +99,19 @@ export const addItem = async(req, res) => {
 
 export const getAllItems = async(req, res) => {
     try {
+      const allItems = await itemModel.find();
+
+      return res.status(200).send({
+        msg : "all items has been fetched",
+        success : true,
+        allItems
+      })
         
     } catch (error) {
-        
+        return res.status(500).send({
+            success : false,
+            msg : error.message
+        })
     }
 }
 
@@ -109,19 +119,34 @@ export const getAllItems = async(req, res) => {
 
 export const getItemById = async(req, res) => {
     try {
+       const {pid} = req.params;
+
+       if(!pid){
+        return res.status(400).send({
+            msg : "item id is must",
+            success : false
+        });
+       }
+
+       const item = await itemModel.findById(pid);
+
+       if(!item){
+        return res.status(400).send({
+            msg : "item not found",
+            success : false
+        });
+       }
+
+        return res.status(200).send({
+            msg : "item found",
+            success : true,
+            item
+        });
         
     } catch (error) {
-        
-    }
-}
-
-
-
-
-export const deleteItem = async(req, res) => {
-    try {
-        
-    } catch (error) {
-        
+       return res.status(500).send({
+         success : false,
+         msg : error.message
+        })
     }
 }
