@@ -12,6 +12,7 @@ import "swiper/css/pagination";
 const ItemPage = () => {
   const { pid } = useParams();
   const [item, setItem] = useState(null);
+  const [enqBtnText, setEnqBtnText] = useState("Enquire");
 
   const getItemById = async () => {
     try {
@@ -30,6 +31,23 @@ const ItemPage = () => {
   useEffect(() => {
     getItemById();
   }, []);
+
+
+  const handleEnquiry = async() =>{
+    try {
+        setEnqBtnText("Enquiring...");
+        const name = item?.name;
+        const itemId = item?._id;
+        const res = await axios.post(`${import.meta.env.VITE_SERVER_API}/api/v1/items/enquire`, {name, itemId});
+
+        if(res.data.success){
+            toast.success("Enquiry releated to this item has been sent to admin.");
+            setEnqBtnText("Enquire");
+        }
+    } catch (error) {
+        toast.error(error.message);
+    }
+  }
 
   return (
     <>
@@ -60,7 +78,7 @@ const ItemPage = () => {
                     return <SwiperSlide>
                         <div className="flex flex-col h-[400px] md:h-[500px] w-full">
                            <img src={path} alt={item?.name} className="w-full img-cover h-[300px] md:h-[400px] rounded-lg" />
-                           <button className="bg-gray-700 px-4 py-2 rounded-full text-gray-100 my-2 w-[20%] mx-auto cursor-pointer hover:bg-gray-600">Enquire</button>
+                           <button className="bg-gray-700 px-4 py-2 rounded-full text-gray-100 my-2 w-[20%] mx-auto cursor-pointer hover:bg-gray-600" onClick={handleEnquiry}>{enqBtnText}</button>
                         </div>
                         </SwiperSlide>
                 })}

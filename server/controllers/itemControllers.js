@@ -1,6 +1,7 @@
 import formidable from "formidable"
 import itemModel from "../models/itemModel.js";
 import cloudinary from "../utils/cloudinary.js";
+import nodemailer from "nodemailer";
 
 export const addItem = async(req, res) => {
     try {
@@ -145,6 +146,42 @@ export const getItemById = async(req, res) => {
         
     } catch (error) {
        return res.status(500).send({
+         success : false,
+         msg : error.message
+        })
+    }
+}
+
+
+
+export const itemEnquiryController = async(req, res) => {
+    try {
+        const {name, itemId} = req.body;
+
+        const transporter = nodemailer.createTransport({
+            service : "gmail",
+            auth : {
+                user : process.env.EMAIL_USER,
+                pass : process.env.EMAIL_PASS,
+            }
+        })
+
+        const mailOptions = {
+            from : "ackerman5023@gmail.com",
+            to :   "admin@amrr.com", 
+            subject : "Product Enquiry",
+            text : `User is interested in the product : ${name}\n\n product id is : ${itemId}`
+        }
+
+        await transporter.sendMail(mailOptions);
+
+        return res.status(200).send({
+            msg : "item details has been sent to admin for enquiry",
+            success : true
+        })
+        
+    } catch (error) {
+        return res.status(500).send({
          success : false,
          msg : error.message
         })
