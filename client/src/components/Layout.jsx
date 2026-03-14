@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
       <nav className="bg-gray-900">
         <div className="px-8 py-2 mx-auto flex justify-between">
           <NavLink to={"/"}><h2 className="text-gray-100 text-2xl">AMRR</h2> </NavLink> 
-          <ul className="flex gap-4 justify-center items center text-gray-100">
+          <ul className="flex gap-4 justify-center items-center text-gray-100">
             <li><NavLink to={"/add-items"}>Add items</NavLink></li>
             <li><NavLink to={"/view-items"}>View items</NavLink></li>
           </ul>
